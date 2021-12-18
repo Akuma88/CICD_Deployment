@@ -22,15 +22,15 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-        fingerprints: [bd:db:75:a7:62:8e:d4:fa:7e:8a:a8:00:e8:39:45:e8]
+          fingerprints: [bd:db:75:a7:62:8e:d4:fa:7e:8a:a8:00:e8:39:45:e8]
       - run: 
-        name: Install Ansible
-        command: |
+          name: Install Ansible
+          command: |
           apk add --update ansible
       - run:
-        name: Configure Server
-        command: |
-          ansible-playbook main-remote.yml -i inventory
+          name: Configure Server
+          command: |
+            ansible-playbook main-remote.yml -i inventory
           
   create_infrastructure:
     docker:
