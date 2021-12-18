@@ -37,8 +37,8 @@
 
 - name: Copy index test page
   template:
-    src: "files/index.js"
-    dest: "~/web/index.js"    
+    src: "files/index1.js"
+    dest: "~/web/index1.js"    
 
 
 - name: Ecexuting node
