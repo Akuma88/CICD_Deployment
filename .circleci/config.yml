@@ -93,8 +93,45 @@ jobs:
         root: ~/
         paths:
           - textfile.txt
+          
+  promote_to_production:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Execute cloudfront.yml
+          command: |
+            aws cloudformation deploy \
+            --template-file cloudfront.yml \
+            --stack-name production-distro \
+            --parameter-overrides PipelineID="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
+            
+  clean_up_old_fron_end:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: yum install -y tar gzip
+      - attach_workspace:
+          at: ~/
+      - run:
+        name: Destroy the previous S3 bucket and Cloudformation Stack
+        command: |
+          export OldBucketID=$(cat ~/textfile.txt)
+          aws s3 rm "s3://${OldBucketID}" -- recursive
+          
+  
 workflows:
   my-workflow:
     jobs:
       - myjob1
-#      - create_and_deploy_frontend
+      - create_and_deploy_frontend
+      - promote_to_production:
+          requires:
+            - create_and_deploy_frontend
+      - get_last_deployment_id
+      - clean_up_old_front_end
+          requires: 
+            - get_last_deployment_id
+            - promote_to_production
