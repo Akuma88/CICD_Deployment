@@ -116,10 +116,10 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-        name: Destroy the previous S3 bucket and Cloudformation Stack
-        command: |
-          export OldBucketID=$(cat ~/textfile.txt)
-          aws s3 rm "s3://${OldBucketID}" -- recursive
+          name: Destroy the previous S3 bucket and Cloudformation Stack
+          command: |
+            export OldBucketID=$(cat ~/textfile.txt)
+            aws s3 rm "s3://${OldBucketID}" -- recursive
           
   
 workflows:
